@@ -1,0 +1,83 @@
+/* pages.css — v5.8 "Halaman Penuh"
+   1) Ikon menu utama: TIDAK ada animasi muncul/klik/keluar. Ikon diam, hanya gerak "melayang" halus bawaan ikon hidup.
+   2) Setiap menu = HALAMAN BARU yang penuh layar (HP, tablet, dan PC), OPAK, tanpa tepi/sudut/bayangan kartu.
+      Masuk dengan geser-pudar singkat (opacity + transform saja = jalur compositor, tanpa layout ulang).
+   3) Halaman tidak menumpuk: bila ada halaman baru di atas, lapisan di bawahnya disembunyikan (data-pg-under, diatur pages.js).
+   Dimuat paling akhir; selector dinaikkan spesifisitasnya (pola :root:root) agar menang atas aturan lama. */
+
+/* ---------- 1. Ikon menu: tanpa animasi masuk/klik/keluar ---------- */
+html.mo-anim:root:root:root:root .nav a .ic,
+html.mo-anim:root:root:root:root .nav a .ic.ic-in,
+html.mo-anim:root:root:root:root .nav a .ic.ic-go{opacity:1!important;animation:none!important}
+html:root:root:root:root .nav a:not(.bnc){animation:none!important}
+html:root:root:root:root .nav a.bnc{animation:none!important}
+/* setelah menu ditutup, ikon/kartu menu tidak boleh "bergerak balik" (mis. efek hover yang dilepas) */
+html.nx-quiet:root:root:root .nav a,
+html.nx-quiet:root:root:root .nav a::before,
+html.nx-quiet:root:root:root .nav a .ic,
+html.nx-quiet:root:root:root .nav a .ic *{transition:none!important}
+html.nx-quiet:root:root:root .nav a .ic{animation:none!important}
+
+@media screen{
+/* ---------- 2. Menu = halaman penuh opak (semua ukuran layar) ---------- */
+html{--pg-bg:#0b1126}
+html:root:root:root:root:root:root .wo-ov:not(.wo-ov2){--pg-bg:#070d10}
+html:root:root:root:root:root:root .es-ov:not(.es-ov2){--pg-bg:#0e1d1a}
+html:root:root:root:root:root:root .ib-ov{--pg-bg:#0d1226}
+
+/* semua "halaman": ac/ad/wo/es/fn/ib/sc (ov2 = lembar form tetap berupa lembar) */
+html:root:root:root:root:root:root :is(.ac-ov:not(.ac-ov2),.ad-ov,.wo-ov:not(.wo-ov2),.es-ov:not(.es-ov2),.fn-ov,.ib-ov,.sc-ov){
+  position:fixed!important;inset:0!important;
+  padding:0!important;margin:0!important;
+  width:100%!important;height:100%!important;
+  align-items:stretch!important;justify-content:stretch!important;
+  background:var(--pg-bg)!important;background-image:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  animation:pgIn .2s cubic-bezier(.2,.8,.2,1) backwards!important;
+}
+html:root:root:root:root:root:root .sc-ov{--pg-bg:#1b1c1e}
+
+/* jendela di dalamnya: memenuhi seluruh halaman, tidak melakukan zoom/geser sendiri (yang bergerak cukup halamannya) */
+html:root:root:root:root:root:root :is(.ac-ov:not(.ac-ov2),.ad-ov,.wo-ov:not(.wo-ov2),.es-ov:not(.es-ov2),.fn-ov,.ib-ov,.sc-ov) :is(.ac-win:not(.ac-form):not(.vw),.ad-win,.wo-frame,.es-frame,.fn-app,.ib-win,.sc-win){
+  width:100%!important;max-width:none!important;
+  height:100%!important;min-height:0!important;max-height:none!important;
+  border-radius:0!important;border:0!important;box-shadow:none!important;margin:0!important;
+  animation:none!important;
+}
+/* animasi masuk bawaan tiap jendela (wx-unfold / wx-light / wx-rise-in …) dimatikan: yang bergerak cukup halamannya */
+html:root:root:root:root:root:root :is(.wo-ov,.es-ov,.fn-ov)>:is(.wo-frame,.es-frame,.fn-app){animation:none!important}
+html:root:root:root:root:root:root .ib-ov .ib-win{height:100dvh!important;padding-top:env(safe-area-inset-top,0)!important}
+html:root:root:root:root:root:root .sc-ov .sc-win{height:100dvh!important;background:var(--sc-bg)!important}
+html:root:root:root:root:root:root .ad-ov .ad-win{min-height:100dvh}
+
+/* elemen yang disembunyikan (hidden) harus tetap hilang */
+html:root:root:root:root:root:root :is(.ac-ov,.ad-ov,.wo-ov,.es-ov,.fn-ov,.ib-ov,.sc-ov)[hidden]{display:none!important}
+
+@keyframes pgIn{from{opacity:0;transform:translate3d(26px,0,0)}to{opacity:1;transform:none}}
+
+/* ---------- 3. Tidak menumpuk: lapisan di bawah halaman baru disembunyikan ---------- */
+[data-pg-under]{visibility:hidden!important;pointer-events:none!important}
+
+/* lembar form (ov2): tetap muncul di atas halamannya, geser naik singkat */
+html:root:root:root :is(.ac-ov2,.wo-ov2,.es-ov2){animation:pgSheet .18s cubic-bezier(.2,.8,.2,1) backwards!important}
+@keyframes pgSheet{from{opacity:0}to{opacity:1}}
+
+/* HP: kunci geser samping agar halaman tidak "goyang" kiri-kanan */
+html,body{overscroll-behavior-x:none}
+
+}
+
+@media (prefers-reduced-motion:reduce){
+  html:root:root:root:root:root:root :is(.ac-ov:not(.ac-ov2),.ad-ov,.wo-ov:not(.wo-ov2),.es-ov:not(.es-ov2),.fn-ov,.ib-ov,.sc-ov),
+  html:root:root:root :is(.ac-ov2,.wo-ov2,.es-ov2){animation:none!important}
+}
+
+/* ---------- 4. Tombol + (Perintah Cepat) di tablet/PC: pindah ke pojok kanan-bawah ----------
+   Di tengah-bawah tombol ini menutupi kartu menu (Task/Calendar/Goal …) sehingga ketukan di kartu malah membuka Perintah Cepat. */
+@media screen and (min-width:700px){
+  html:root:root .sf-fab{left:auto;right:28px;bottom:56px;transform:none}
+  html:root:root .sf-fab:hover{transform:scale(1.08) rotate(90deg)}
+}
+
+/* v6.1: daftar panjang — kartu di luar layar tidak ikut dihitung layout/paint (data besar jadi tidak berat) */
+.tk3-note{content-visibility:auto;contain-intrinsic-size:auto 96px;overflow-clip-margin:32px}

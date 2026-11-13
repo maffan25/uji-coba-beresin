@@ -1,0 +1,22 @@
+{
+  "id": "./index.html",
+  "name": "Beresin",
+  "short_name": "Beresin",
+  "description": "Semua teratur, hidup lebih mudah — tugas, proyek, acara, keuangan, dan dokumen dalam satu aplikasi.",
+  "lang": "id",
+  "dir": "ltr",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0b1020",
+  "theme_color": "#2F6BFF",
+  "categories": ["productivity", "business", "education"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

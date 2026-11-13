@@ -1,0 +1,64 @@
+/* v5.2 — Pilihan kampus di Academic (opsional). Data, nilai, IP/IPK & analisis tiap kampus terpisah. */
+.ad-cp{padding:0 clamp(14px,2.2vw,26px) 4px}
+.ad-cp .cp-bar{display:flex;align-items:center;gap:8px;min-width:0}
+.ad-cp .cp-lb{flex:none;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mute,#7d7c9b)}
+.ad-cp .cp-chips{display:flex;gap:6px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px 0}
+.ad-cp .cp-chips::-webkit-scrollbar{display:none}
+.ad-cp .cp-chip,.ad-cp .cp-add,.ad-cp .cp-ic{flex:none;border:1px solid var(--line,rgba(120,130,170,.25));background:var(--soft,rgba(120,130,170,.08));color:inherit;font:inherit;font-size:12.5px;font-weight:600;border-radius:999px;cursor:pointer}
+.ad-cp .cp-chip{padding:6px 13px;white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
+.ad-cp .cp-chip[aria-pressed=true]{background:var(--ac,#5b7cff);border-color:transparent;color:#fff}
+.ad-cp .cp-ic{width:30px;height:30px;display:grid;place-items:center;padding:0}
+.ad-cp .cp-ic svg{width:15px;height:15px}
+.ad-cp .cp-add{display:inline-flex;align-items:center;gap:4px;padding:6px 11px;border-style:dashed}
+.ad-cp .cp-add svg{width:14px;height:14px}
+.ad-cp .cp-hint{margin:6px 2px 2px;font-size:12px;line-height:1.4;color:var(--mute,#7d7c9b)}
+@media(max-width:560px){.ad-cp .cp-lb{display:none}.ad-cp .cp-add span{display:none}.ad-cp .cp-add{width:30px;height:30px;padding:0;justify-content:center}}
+
+/* v6.1 — Tumpukan kartu mata kuliah: satu box per kampus, kartu bertumpuk seperti kertas.
+   Gulir box = memilih kartu; kartu terpilih naik keluar dari box (posisi dihitung di app.js, stkPos). */
+html:root:root:root .ad-win .stk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:34px 24px;margin-top:8px;align-items:start}
+html:root:root:root .ad-win .stk-box{--b:430px;--tt:250px;--pn:70px;min-width:0}
+html:root:root:root .ad-win .stk-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 4px 10px}
+html:root:root:root .ad-win .stk-hd b{display:block;font-size:16px;font-weight:800;color:var(--ad-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html:root:root:root .ad-win .stk-hd small{display:block;margin-top:2px;font-size:12px;color:var(--ad-mute)}
+html:root:root:root .ad-win .stk-hd>div{min-width:0}
+html:root:root:root .ad-win .stk-hd .ac-btn{flex:none;display:inline-flex;align-items:center;gap:4px}
+html:root:root:root .ad-win .stk-hd .ac-btn svg{width:14px;height:14px}
+html:root:root:root .ad-win .stk-view{position:relative;overflow-x:hidden;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior-y:auto;border-radius:22px;outline:none;-webkit-overflow-scrolling:touch}
+html:root:root:root .ad-win .stk-view::-webkit-scrollbar{display:none}
+html:root:root:root .ad-win .stk-view:focus-visible{box-shadow:0 0 0 2px var(--ad-navy)}
+html:root:root:root .ad-win .stk-sp{scroll-snap-align:start;pointer-events:none}
+html:root:root:root .ad-win .stk-stage{position:sticky;top:0;height:var(--b);overflow:hidden;isolation:isolate}
+/* bagian dalam box + tepi/bibir box */
+html:root:root:root .ad-win .stk-tray{position:absolute;left:0;right:0;top:var(--tt);bottom:0;z-index:1;border:4px solid var(--bx);border-bottom:0;border-radius:22px 22px 0 0;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--bxd) 88%,#000),var(--bxd));box-shadow:inset 0 14px 20px -10px rgba(0,0,0,.55)}
+html:root:root:root .ad-win .stk-none{position:absolute;left:18px;right:18px;top:calc(var(--tt) - 70px);z-index:3;text-align:center;font-size:13px;line-height:1.45;color:var(--ad-mute);padding:14px;border:1.5px dashed var(--ad-line);border-radius:16px;background:var(--ad-card)}
+/* sisi depan box + papan nama */
+html:root:root:root .ad-win .stk-front{position:absolute;left:0;right:0;bottom:0;height:var(--pn);z-index:2000;display:flex;align-items:center;gap:12px;padding:0 14px;border-radius:8px 8px 22px 22px;
+  background:linear-gradient(180deg,var(--bx),color-mix(in srgb,var(--bx) 80%,#000));box-shadow:0 -8px 14px -8px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.38),inset 0 -3px 0 rgba(0,0,0,.12)}
+html:root:root:root .ad-win .stk-plate{flex:1;min-width:0;padding:7px 12px 8px;border-radius:9px;background:var(--bxl);color:#33260f;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.2),0 1px 0 rgba(255,255,255,.45)}
+html:root:root:root .ad-win .stk-plate small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.62;line-height:1.2}
+html:root:root:root .ad-win .stk-plate b{display:block;font-size:14.5px;font-weight:800;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html:root:root:root .ad-win .stk-nav{flex:none;display:flex;align-items:center;gap:6px;color:#fff;font-size:12px;font-weight:800;text-shadow:0 1px 1px rgba(0,0,0,.25)}
+html:root:root:root .ad-win .stk-ct{min-width:38px;text-align:center;font-variant-numeric:tabular-nums}
+html:root:root:root .ad-win .stk-nav button{width:32px;height:32px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.26);color:#fff;cursor:pointer;transition:background .15s,transform .15s}
+html:root:root:root .ad-win .stk-nav button:hover:not(:disabled){background:rgba(255,255,255,.42)}
+html:root:root:root .ad-win .stk-nav button:active:not(:disabled){transform:scale(.92)}
+html:root:root:root .ad-win .stk-nav button:disabled{opacity:.4;cursor:default}
+html:root:root:root .ad-win .stk-nav button svg{width:16px;height:16px;stroke-width:2.4}
+html:root:root:root .ad-win .stk-nav button:first-child svg{transform:rotate(-90deg)}
+html:root:root:root .ad-win .stk-nav button:last-child svg{transform:rotate(90deg)}
+/* kartu = selembar kertas */
+html:root:root:root .ad-win .stk-card{position:absolute;left:14px;right:14px;top:0;transform-origin:50% 0;will-change:transform,opacity;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html:root:root:root .ad-win .stk-card>.dv-cv{height:100%;transform:none;box-shadow:0 -3px 8px -4px rgba(35,25,5,.35),0 1px 0 rgba(255,255,255,.5) inset;transition:box-shadow .25s}
+html:root:root:root .ad-win .stk-card.is-on>.dv-cv{box-shadow:0 22px 34px -18px var(--cv),0 2px 6px rgba(35,25,5,.14)}
+html:root:root:root .ad-win .stk-card>.dv-cv:hover,html:root:root:root .ad-win .stk-card>.dv-cv:focus-visible{transform:none}
+html:root:root:root .ad-win .stk-card:not(.is-on)>.dv-cv{pointer-events:none}
+/* label di tepi atas kertas (terlihat saat kartu ada di tumpukan) */
+html:root:root:root .ad-win .stk-card .dv-cap>:not(.ad-tile){opacity:calc(1 - var(--tg,0) * 1.6)}
+html:root:root:root .ad-win .stk-tag{opacity:var(--tg,0);position:absolute;left:0;right:0;top:0;height:32px;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 16px;border-radius:22px 22px 0 0;background:var(--cv);color:#fff;pointer-events:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+html:root:root:root .ad-win .stk-tag b{min-width:0;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html:root:root:root .ad-win .stk-tag small{flex:none;font-size:11px;font-weight:700;opacity:.85}
+@media (max-width:560px){html:root:root:root .ad-win .stk-grid{grid-template-columns:1fr;gap:30px}}
+@media (prefers-reduced-motion:reduce){html:root:root:root .ad-win .stk-view{scroll-behavior:auto}}
